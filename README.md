@@ -1,41 +1,52 @@
-SMART FARE TRACKER 
-This project compares fare data from various service platforms such as Ola, Uber, Swiggy, and Zomato, and recommends the most economical and time-efficient option based on user preferences (like lowest price, shortest ETA, or distance).
+#  Smart Fare Tracker
 
-Features
-Real-time fare comparison across multiple platforms
-Best Option Selector based on:
-    Lowest Fare
-    Fastest Delivery/Arrival Time
-    Distance efficiency
-Dynamic dashboards for fare trends
-Easy to customize and extend to more platforms (Rapido, Dunzo, etc.)
+Smart Fare Tracker compares fare data from multiple service platforms such as **Ola, Uber, Swiggy, and Zomato** and recommends the most economical and time-efficient option based on user preferences like **lowest price, shortest ETA, or distance**.
 
-Sample Data Fields Used
-Field	Description
-Timestamp	Date and time of fare observation
-Platform	Name of the app (Uber, Ola, Swiggy...)
-Fare (₹)	Total fare at the time
-Distance (km)	Estimated distance of trip
-Estimated Time (min)	ETA or delivery time
+---
 
-How it Works
-Reads fare data from a CSV file.
-Filters entries by time or service type (taxi/food).
-Compares all platforms available for the same time window.
-Displays the best fare option based on user preference:
-      Price
-      Time
-      Distance
+##  Features
 
-Example Output
-Best Option at 10:00 AM for Taxi:
+- Real-time fare comparison across multiple platforms
+- Best Option Selector based on:
+  -  Lowest Fare
+  -  Fastest Delivery/Arrival Time
+  -  Distance Efficiency
+- Dynamic dashboards for fare trends
+- Easy to customize and extend to additional platforms such as Rapido and Dunzo
+
+---
+
+##  Sample Data Fields
+
+| Field | Description |
+|---------|-------------|
+| Timestamp | Date and time of fare observation |
+| Platform | Name of the platform (Uber, Ola, Swiggy, Zomato, etc.) |
+| Fare (₹) | Total fare at the time |
+| Distance (km) | Estimated trip/delivery distance |
+| Estimated Time (min) | ETA or delivery time |
+
+---
+
+##  How It Works
+
+1. Reads fare data from a CSV file.
+2. Filters entries by time or service type (Taxi/Food Delivery).
+3. Compares fares across all available platforms within the selected time window.
+4. Recommends the best option based on the user's preference:
+   - Price
+   - Time
+   - Distance
+
+---
+
+##  Example Output
+
+### Taxi Service
+
+```text
+Best Option at 10:00 AM:
 Uber - ₹145, ETA: 14 min
-
-Best Option at 10:00 AM for Food Delivery:
-Swiggy - ₹70, ETA: 25 min
-
-Technologies Used
-C++ for core logic and file parsing
 
 
 
