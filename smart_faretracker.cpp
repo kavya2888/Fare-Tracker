@@ -2,10 +2,11 @@
 #include <vector>
 #include <memory>
 #include <iomanip>
-
 using namespace std;
 
+
 // Abstract Base Class
+
 class ServicePlatform {
 public:
     virtual double calculateCost() = 0;
@@ -43,7 +44,8 @@ public:
         cout << "Uber Ride | Distance: "
              << distance
              << " km | Surge: "
-             << surgeMultiplier << "x\n";
+             << surgeMultiplier
+             << "x\n";
     }
 };
 
@@ -64,10 +66,10 @@ public:
         cout << "Ola Ride | Distance: "
              << distance
              << " km | Surge: "
-             << surgeMultiplier << "x\n";
+             << surgeMultiplier
+             << "x\n";
     }
 };
-
 
 // Food Delivery Services
 
@@ -102,7 +104,8 @@ public:
         cout << "Swiggy Order | Order Value: ₹"
              << orderValue
              << " | Distance: "
-             << deliveryDistance << " km\n";
+             << deliveryDistance
+             << " km\n";
     }
 };
 
@@ -125,9 +128,11 @@ public:
         cout << "Zomato Order | Order Value: ₹"
              << orderValue
              << " | Distance: "
-             << deliveryDistance << " km\n";
+             << deliveryDistance
+             << " km\n";
     }
 };
+
 
 // Shopping Services
 
@@ -168,7 +173,8 @@ public:
         cout << "Amazon Product | Price: ₹"
              << productPrice
              << " | Discount: "
-             << discountPercent << "%\n";
+             << discountPercent
+             << "%\n";
     }
 };
 
@@ -194,11 +200,40 @@ public:
         cout << "Flipkart Product | Price: ₹"
              << productPrice
              << " | Discount: "
-             << discountPercent << "%\n";
+             << discountPercent
+             << "%\n";
     }
 };
 
-// Fare Tracker Engine
+class Myntra : public ShoppingService {
+public:
+    Myntra(double price,
+           double shipping,
+           double discount)
+        : ShoppingService(price,
+                          shipping,
+                          discount) {}
+
+    double calculateCost() override {
+        return (productPrice * (1 - discountPercent / 100.0))
+               + shippingCharge;
+    }
+
+    string getName() override {
+        return "Myntra";
+    }
+
+    void displayDetails() override {
+        cout << "Myntra Product | Price: ₹"
+             << productPrice
+             << " | Discount: "
+             << discountPercent
+             << "%\n";
+    }
+};
+
+// Smart Fare Tracker Engine
+
 class FareTracker {
 private:
     vector<shared_ptr<ServicePlatform>> services;
@@ -210,7 +245,7 @@ public:
 
     void compareServices() {
 
-        double minimumCost = 1e9;
+        double minimumCost = 1e18;
         string bestService;
 
         cout << "SMART FARE TRACKER\n";
@@ -233,21 +268,28 @@ public:
             }
         }
 
-        cout << "Recommended Platform: "
-             << bestService << "\n";
+    
+        cout << "Recommended Platform : "
+             << bestService
+             << "\n";
 
-        cout << "Estimated Cost: ₹"
-             << minimumCost << "\n";
+        cout << "Estimated Cost       : ₹"
+             << minimumCost
+             << "\n";
+       
     }
 };
 
+
 // Main Function
+
 
 int main() {
 
     FareTracker tracker;
 
     // Ride Sharing
+
     tracker.addService(
         make_shared<Uber>(10, 1.2));
 
@@ -255,6 +297,7 @@ int main() {
         make_shared<Ola>(10, 1.2));
 
     // Food Delivery
+
     tracker.addService(
         make_shared<Swiggy>(300, 4));
 
@@ -262,11 +305,15 @@ int main() {
         make_shared<Zomato>(300, 4));
 
     // Shopping
+
     tracker.addService(
         make_shared<Amazon>(2000, 50, 10));
 
     tracker.addService(
         make_shared<Flipkart>(2000, 30, 8));
+
+    tracker.addService(
+        make_shared<Myntra>(2000, 20, 15));
 
     tracker.compareServices();
 
