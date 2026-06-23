@@ -2,10 +2,10 @@
 #include <vector>
 #include <memory>
 #include <iomanip>
-#include <algorithm>
 
 using namespace std;
 
+// Abstract Base Class
 class ServicePlatform {
 public:
     virtual double calculateCost() = 0;
@@ -13,6 +13,8 @@ public:
     virtual void displayDetails() = 0;
     virtual ~ServicePlatform() {}
 };
+
+// Ride Sharing Services
 
 class RideSharingService : public ServicePlatform {
 protected:
@@ -23,7 +25,6 @@ public:
     RideSharingService(double dist, double surge)
         : distance(dist), surgeMultiplier(surge) {}
 };
-
 
 class Uber : public RideSharingService {
 public:
@@ -42,8 +43,7 @@ public:
         cout << "Uber Ride | Distance: "
              << distance
              << " km | Surge: "
-             << surgeMultiplier
-             << "x\n";
+             << surgeMultiplier << "x\n";
     }
 };
 
@@ -64,10 +64,12 @@ public:
         cout << "Ola Ride | Distance: "
              << distance
              << " km | Surge: "
-             << surgeMultiplier
-             << "x\n";
+             << surgeMultiplier << "x\n";
     }
 };
+
+
+// Food Delivery Services
 
 class FoodDeliveryService : public ServicePlatform {
 protected:
@@ -89,9 +91,7 @@ public:
                               deliveryDist) {}
 
     double calculateCost() override {
-        return orderValue +
-               20 +
-               (deliveryDistance * 3);
+        return orderValue + 20 + (deliveryDistance * 3);
     }
 
     string getName() override {
@@ -102,11 +102,9 @@ public:
         cout << "Swiggy Order | Order Value: ₹"
              << orderValue
              << " | Distance: "
-             << deliveryDistance
-             << " km\n";
+             << deliveryDistance << " km\n";
     }
 };
-
 
 class Zomato : public FoodDeliveryService {
 public:
@@ -116,9 +114,7 @@ public:
                               deliveryDist) {}
 
     double calculateCost() override {
-        return orderValue +
-               15 +
-               (deliveryDistance * 4);
+        return orderValue + 15 + (deliveryDistance * 4);
     }
 
     string getName() override {
@@ -129,12 +125,80 @@ public:
         cout << "Zomato Order | Order Value: ₹"
              << orderValue
              << " | Distance: "
-             << deliveryDistance
-             << " km\n";
+             << deliveryDistance << " km\n";
     }
 };
 
+// Shopping Services
 
+class ShoppingService : public ServicePlatform {
+protected:
+    double productPrice;
+    double shippingCharge;
+    double discountPercent;
+
+public:
+    ShoppingService(double price,
+                    double shipping,
+                    double discount)
+        : productPrice(price),
+          shippingCharge(shipping),
+          discountPercent(discount) {}
+};
+
+class Amazon : public ShoppingService {
+public:
+    Amazon(double price,
+           double shipping,
+           double discount)
+        : ShoppingService(price,
+                          shipping,
+                          discount) {}
+
+    double calculateCost() override {
+        return (productPrice * (1 - discountPercent / 100.0))
+               + shippingCharge;
+    }
+
+    string getName() override {
+        return "Amazon";
+    }
+
+    void displayDetails() override {
+        cout << "Amazon Product | Price: ₹"
+             << productPrice
+             << " | Discount: "
+             << discountPercent << "%\n";
+    }
+};
+
+class Flipkart : public ShoppingService {
+public:
+    Flipkart(double price,
+             double shipping,
+             double discount)
+        : ShoppingService(price,
+                          shipping,
+                          discount) {}
+
+    double calculateCost() override {
+        return (productPrice * (1 - discountPercent / 100.0))
+               + shippingCharge;
+    }
+
+    string getName() override {
+        return "Flipkart";
+    }
+
+    void displayDetails() override {
+        cout << "Flipkart Product | Price: ₹"
+             << productPrice
+             << " | Discount: "
+             << discountPercent << "%\n";
+    }
+};
+
+// Fare Tracker Engine
 class FareTracker {
 private:
     vector<shared_ptr<ServicePlatform>> services;
@@ -149,9 +213,7 @@ public:
         double minimumCost = 1e9;
         string bestService;
 
-        cout << "\n=================================\n";
-        cout << " SMART FARE TRACKER DASHBOARD\n";
-        cout << "=================================\n\n";
+        cout << "SMART FARE TRACKER\n";
 
         for (auto &service : services) {
 
@@ -171,49 +233,40 @@ public:
             }
         }
 
-        cout << "---------------------------------\n";
         cout << "Recommended Platform: "
-             << bestService
-             << "\n";
+             << bestService << "\n";
 
         cout << "Estimated Cost: ₹"
-             << minimumCost
-             << "\n";
-        cout << "---------------------------------\n";
+             << minimumCost << "\n";
     }
 };
+
+// Main Function
 
 int main() {
 
     FareTracker tracker;
 
-    // Ride-sharing example
-    double rideDistance = 10;   // km
-    double surge = 1.2;
+    // Ride Sharing
+    tracker.addService(
+        make_shared<Uber>(10, 1.2));
 
     tracker.addService(
-        make_shared<Uber>(
-            rideDistance,
-            surge));
+        make_shared<Ola>(10, 1.2));
+
+    // Food Delivery
+    tracker.addService(
+        make_shared<Swiggy>(300, 4));
 
     tracker.addService(
-        make_shared<Ola>(
-            rideDistance,
-            surge));
+        make_shared<Zomato>(300, 4));
 
-    // Food-delivery example
-    double orderValue = 300; // ₹
-    double deliveryDistance = 4;
+    // Shopping
+    tracker.addService(
+        make_shared<Amazon>(2000, 50, 10));
 
     tracker.addService(
-        make_shared<Swiggy>(
-            orderValue,
-            deliveryDistance));
-
-    tracker.addService(
-        make_shared<Zomato>(
-            orderValue,
-            deliveryDistance));
+        make_shared<Flipkart>(2000, 30, 8));
 
     tracker.compareServices();
 
