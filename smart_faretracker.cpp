@@ -1,96 +1,221 @@
-// SmartFareTracker.cpp
-// Simulates fare tracking for delivery/taxi apps (Zomato, Swiggy, Ola, Uber)
-
 #include <iostream>
-#include <fstream>
 #include <vector>
-#include <ctime>
+#include <memory>
 #include <iomanip>
-#include <cstdlib>
-#include <string>
 #include <algorithm>
 
 using namespace std;
 
-struct FareEntry {
-    string service;
-    float fare;
-    string timestamp;
+class ServicePlatform {
+public:
+    virtual double calculateCost() = 0;
+    virtual string getName() = 0;
+    virtual void displayDetails() = 0;
+    virtual ~ServicePlatform() {}
 };
 
-string getCurrentTime() {
-    time_t now = time(0);
-    tm *ltm = localtime(&now);
-    char buf[32];
-    strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", ltm);
-    return string(buf);
-}
+class RideSharingService : public ServicePlatform {
+protected:
+    double distance;
+    double surgeMultiplier;
 
-void generateMockFareData(const string& filename, int entries) {
-    ofstream fout(filename);
-    vector<string> services = {"Zomato", "Swiggy", "Uber", "Ola"};
-    srand(time(0));
+public:
+    RideSharingService(double dist, double surge)
+        : distance(dist), surgeMultiplier(surge) {}
+};
 
-    for (int i = 0; i < entries; ++i) {
-        string service = services[rand() % services.size()];
-        float fare = 50 + rand() % 500 + (rand() % 100) / 100.0; // ₹50 to ₹550
-        string timestamp = getCurrentTime();
-        fout << service << "," << fixed << setprecision(2) << fare << "," << timestamp << endl;
+
+class Uber : public RideSharingService {
+public:
+    Uber(double dist, double surge)
+        : RideSharingService(dist, surge) {}
+
+    double calculateCost() override {
+        return (50 + distance * 12) * surgeMultiplier;
     }
 
-    fout.close();
-}
-
-vector<FareEntry> loadFareData(const string& filename) {
-    vector<FareEntry> entries;
-    ifstream fin(filename);
-    string line;
-
-    while (getline(fin, line)) {
-        size_t pos1 = line.find(',');
-        size_t pos2 = line.find_last_of(',');
-
-        if (pos1 == string::npos || pos2 == string::npos || pos1 == pos2) continue;
-
-        string service = line.substr(0, pos1);
-        float fare = stof(line.substr(pos1 + 1, pos2 - pos1 - 1));
-        string timestamp = line.substr(pos2 + 1);
-
-        entries.push_back({service, fare, timestamp});
+    string getName() override {
+        return "Uber";
     }
 
-    return entries;
-}
-
-void displayFareTrend(const vector<FareEntry>& entries) {
-    cout << "\n--- Fare Trend Dashboard (ASCII Graph) ---\n";
-    for (const auto& entry : entries) {
-        cout << left << setw(8) << entry.service << " ₹" << setw(6) << entry.fare << " ";
-        int bar = static_cast<int>(entry.fare / 10);
-        for (int i = 0; i < bar; ++i) cout << "#";
-        cout << "\n";
+    void displayDetails() override {
+        cout << "Uber Ride | Distance: "
+             << distance
+             << " km | Surge: "
+             << surgeMultiplier
+             << "x\n";
     }
-}
+};
 
-void alertForLowFares(const vector<FareEntry>& entries, float threshold) {
-    cout << "\n--- Alerts for Low Fares (Below ₹" << threshold << ") ---\n";
-    for (const auto& entry : entries) {
-        if (entry.fare < threshold) {
-            cout << "[ALERT] " << entry.service << " - ₹" << entry.fare << " at " << entry.timestamp << endl;
+class Ola : public RideSharingService {
+public:
+    Ola(double dist, double surge)
+        : RideSharingService(dist, surge) {}
+
+    double calculateCost() override {
+        return (40 + distance * 11) * surgeMultiplier;
+    }
+
+    string getName() override {
+        return "Ola";
+    }
+
+    void displayDetails() override {
+        cout << "Ola Ride | Distance: "
+             << distance
+             << " km | Surge: "
+             << surgeMultiplier
+             << "x\n";
+    }
+};
+
+class FoodDeliveryService : public ServicePlatform {
+protected:
+    double orderValue;
+    double deliveryDistance;
+
+public:
+    FoodDeliveryService(double orderVal,
+                        double deliveryDist)
+        : orderValue(orderVal),
+          deliveryDistance(deliveryDist) {}
+};
+
+class Swiggy : public FoodDeliveryService {
+public:
+    Swiggy(double orderVal,
+           double deliveryDist)
+        : FoodDeliveryService(orderVal,
+                              deliveryDist) {}
+
+    double calculateCost() override {
+        return orderValue +
+               20 +
+               (deliveryDistance * 3);
+    }
+
+    string getName() override {
+        return "Swiggy";
+    }
+
+    void displayDetails() override {
+        cout << "Swiggy Order | Order Value: ₹"
+             << orderValue
+             << " | Distance: "
+             << deliveryDistance
+             << " km\n";
+    }
+};
+
+
+class Zomato : public FoodDeliveryService {
+public:
+    Zomato(double orderVal,
+           double deliveryDist)
+        : FoodDeliveryService(orderVal,
+                              deliveryDist) {}
+
+    double calculateCost() override {
+        return orderValue +
+               15 +
+               (deliveryDistance * 4);
+    }
+
+    string getName() override {
+        return "Zomato";
+    }
+
+    void displayDetails() override {
+        cout << "Zomato Order | Order Value: ₹"
+             << orderValue
+             << " | Distance: "
+             << deliveryDistance
+             << " km\n";
+    }
+};
+
+
+class FareTracker {
+private:
+    vector<shared_ptr<ServicePlatform>> services;
+
+public:
+    void addService(shared_ptr<ServicePlatform> service) {
+        services.push_back(service);
+    }
+
+    void compareServices() {
+
+        double minimumCost = 1e9;
+        string bestService;
+
+        cout << "\n=================================\n";
+        cout << " SMART FARE TRACKER DASHBOARD\n";
+        cout << "=================================\n\n";
+
+        for (auto &service : services) {
+
+            service->displayDetails();
+
+            double cost = service->calculateCost();
+
+            cout << "Total Cost: ₹"
+                 << fixed
+                 << setprecision(2)
+                 << cost
+                 << "\n\n";
+
+            if (cost < minimumCost) {
+                minimumCost = cost;
+                bestService = service->getName();
+            }
         }
+
+        cout << "---------------------------------\n";
+        cout << "Recommended Platform: "
+             << bestService
+             << "\n";
+
+        cout << "Estimated Cost: ₹"
+             << minimumCost
+             << "\n";
+        cout << "---------------------------------\n";
     }
-}
+};
 
 int main() {
-    string filename = "mock_fares.csv";
-    int mockEntries = 10;
-    float alertThreshold = 150.0;
 
-    generateMockFareData(filename, mockEntries);
-    vector<FareEntry> fares = loadFareData(filename);
+    FareTracker tracker;
 
-    displayFareTrend(fares);
-    alertForLowFares(fares, alertThreshold);
+    // Ride-sharing example
+    double rideDistance = 10;   // km
+    double surge = 1.2;
+
+    tracker.addService(
+        make_shared<Uber>(
+            rideDistance,
+            surge));
+
+    tracker.addService(
+        make_shared<Ola>(
+            rideDistance,
+            surge));
+
+    // Food-delivery example
+    double orderValue = 300; // ₹
+    double deliveryDistance = 4;
+
+    tracker.addService(
+        make_shared<Swiggy>(
+            orderValue,
+            deliveryDistance));
+
+    tracker.addService(
+        make_shared<Zomato>(
+            orderValue,
+            deliveryDistance));
+
+    tracker.compareServices();
 
     return 0;
 }
