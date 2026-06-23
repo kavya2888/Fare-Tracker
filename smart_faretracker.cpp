@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include <iomanip>
+#include <map>
 using namespace std;
 
 
@@ -11,6 +12,7 @@ class ServicePlatform {
 public:
     virtual double calculateCost() = 0;
     virtual string getName() = 0;
+    virtual string getCategory() = 0;   // NEW: identifies which category this platform belongs to
     virtual void displayDetails() = 0;
     virtual ~ServicePlatform() {}
 };
@@ -25,6 +27,10 @@ protected:
 public:
     RideSharingService(double dist, double surge)
         : distance(dist), surgeMultiplier(surge) {}
+
+    string getCategory() override {
+        return "Ride-Hailing";
+    }
 };
 
 class Uber : public RideSharingService {
@@ -83,6 +89,10 @@ public:
                         double deliveryDist)
         : orderValue(orderVal),
           deliveryDistance(deliveryDist) {}
+
+    string getCategory() override {
+        return "Food Delivery";
+    }
 };
 
 class Swiggy : public FoodDeliveryService {
@@ -149,6 +159,10 @@ public:
         : productPrice(price),
           shippingCharge(shipping),
           discountPercent(discount) {}
+
+    string getCategory() override {
+        return "Shopping";
+    }
 };
 
 class Amazon : public ShoppingService {
@@ -244,39 +258,57 @@ public:
     }
 
     void compareServices() {
+        cout << "          SMART FARE TRACKER\n";
 
-        double minimumCost = 1e18;
-        string bestService;
 
-        cout << "SMART FARE TRACKER\n";
+        // Group services by category so we never compare
+        // a ride against a shopping order, etc.
+        map<string, vector<shared_ptr<ServicePlatform>>> categoryMap;
 
         for (auto &service : services) {
-
-            service->displayDetails();
-
-            double cost = service->calculateCost();
-
-            cout << "Total Cost: ₹"
-                 << fixed
-                 << setprecision(2)
-                 << cost
-                 << "\n\n";
-
-            if (cost < minimumCost) {
-                minimumCost = cost;
-                bestService = service->getName();
-            }
+            categoryMap[service->getCategory()].push_back(service);
         }
 
-    
-        cout << "Recommended Platform : "
-             << bestService
-             << "\n";
+        // Process each category independently
+        for (auto &entry : categoryMap) {
 
-        cout << "Estimated Cost       : ₹"
-             << minimumCost
-             << "\n";
-       
+            string category = entry.first;
+            vector<shared_ptr<ServicePlatform>> &platforms = entry.second;
+
+            cout << "-----------------------------------------\n";
+            cout << "Category: " << category << "\n";
+            cout << "-----------------------------------------\n";
+
+            double minimumCost = 1e18;
+            string bestService;
+
+            for (auto &service : platforms) {
+
+                service->displayDetails();
+
+                double cost = service->calculateCost();
+
+                cout << "Total Cost: ₹"
+                     << fixed
+                     << setprecision(2)
+                     << cost
+                     << "\n\n";
+
+                if (cost < minimumCost) {
+                    minimumCost = cost;
+                    bestService = service->getName();
+                }
+            }
+
+            cout << "Recommended " << category << " Platform : "
+                 << bestService
+                 << "\n";
+
+            cout << "Estimated Cost                      : ₹"
+                 << fixed << setprecision(2)
+                 << minimumCost
+                 << "\n\n";
+        }
     }
 };
 
