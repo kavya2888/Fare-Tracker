@@ -1,13 +1,14 @@
-#  Smart Fare Tracker
+# Smart Fare Tracker
 
-Smart Fare Tracker is a C++-based fare comparison and recommendation system that helps users choose the most cost-effective service across ride-hailing and food-delivery platforms.
+Smart Fare Tracker is a C++-based multi-platform comparison and recommendation system that helps users identify the most cost-effective option across ride-hailing, food-delivery, and shopping platforms.
 
-The application leverages Object-Oriented Programming (OOP) principles to model different service providers and generate intelligent recommendations based on cost, ETA, and distance.
+The application leverages Object-Oriented Programming (OOP) principles to model different service providers and generate intelligent recommendations based on cost, ETA, distance, and discounts.
 
 Supported Platforms:
 
-*  Ride-Hailing Services: Uber, Ola
-*  Food Delivery Services: Swiggy, Zomato
+* Ride-Hailing Services: Uber, Ola
+* Food Delivery Services: Swiggy, Zomato
+* Shopping Platforms: Amazon, Flipkart, Myntra
 
 ---
 
@@ -15,11 +16,13 @@ Supported Platforms:
 
 * Compare ride fares across Uber and Ola
 * Compare delivery costs across Swiggy and Zomato
+* Compare product prices across Amazon, Flipkart, and Myntra
 * Intelligent recommendation engine
 * ETA-based service comparison
 * Distance-aware cost evaluation
+* Discount-aware shopping recommendations
 * Fully object-oriented architecture
-* Easy integration of new platforms such as Rapido, Blinkit, Dunzo, Amazon Fresh, etc.
+* Easy integration of new platforms such as Rapido, Blinkit, Dunzo, Zepto, and Amazon Fresh
 
 ---
 
@@ -42,9 +45,14 @@ ServicePlatform
 │     ├── Uber
 │     └── Ola
 │
-└── FoodDeliveryService
-      ├── Swiggy
-      └── Zomato
+├── FoodDeliveryService
+│     ├── Swiggy
+│     └── Zomato
+│
+└── ShoppingService
+      ├── Amazon
+      ├── Flipkart
+      └── Myntra
 ```
 
 ### Polymorphism
@@ -53,13 +61,13 @@ Each platform implements its own pricing strategy through overridden `calculateC
 
 ### Encapsulation
 
-Platform-specific data such as fare, distance, delivery charges, and ETA are maintained within their respective classes.
+Platform-specific data such as fare, distance, delivery charges, discounts, and ETA are maintained within their respective classes.
 
 ---
 
 ## How It Works
 
-1. User provides ride or delivery requirements.
+1. User provides ride, delivery, or shopping requirements.
 2. The system gathers platform-specific pricing information.
 3. Individual platform classes calculate estimated costs.
 4. The recommendation engine compares all available options.
@@ -110,61 +118,62 @@ Output:
 
 ---
 
+## Shopping Comparison
+
+Platforms:
+
+* Amazon
+* Flipkart
+* Myntra
+
+Comparison Parameters:
+
+* Product Price
+* Shipping Charges
+* Discounts
+* Delivery Time
+
+Output:
+
+* Best Shopping Option
+* Final Cost
+* Savings Compared to Alternatives
+
+---
+
 ## Example Output
 
 ```text
-=========================================
           SMART FARE TRACKER
 =========================================
 
-Enter Ride Distance : 8 km
-Current Time        : 10:00 AM
-
------ Ride Sharing Comparison -----
-
 Platform : Uber
-Fare     : ₹185
-ETA      : 12 min
+Cost     : ₹204
 
 Platform : Ola
-Fare     : ₹172
-ETA      : 14 min
-
------------------------------------------
-Best Ride Option
------------------------------------------
-Platform : Ola
-Fare     : ₹172
-ETA      : 14 min
-Savings  : ₹13 compared to Uber
-
-=========================================
-
-Order Value   : ₹350
-Delivery Area : IIT Kharagpur
-
------ Food Delivery Comparison -----
+Cost     : ₹180
 
 Platform : Swiggy
-Cost     : ₹70
-ETA      : 25 min
-Distance : 4.5 km
+Cost     : ₹332
 
 Platform : Zomato
-Cost     : ₹85
-ETA      : 30 min
-Distance : 4.5 km
+Cost     : ₹331
+
+Platform : Amazon
+Cost     : ₹1850
+
+Platform : Flipkart
+Cost     : ₹1870
+
+Platform : Myntra
+Cost     : ₹1720
 
 -----------------------------------------
-Best Food Delivery Option
+Recommended Platform
 -----------------------------------------
-Platform : Swiggy
-Cost     : ₹70
-ETA      : 25 min
-Distance : 4.5 km
-Savings  : ₹15 compared to Zomato
-
-=========================================
+Platform : Myntra
+Cost     : ₹1720
+-----------------------------------------
 ```
 
 ## Technologies Used
@@ -174,6 +183,7 @@ Savings  : ₹15 compared to Zomato
 * STL (Vectors, Smart Pointers)
 * Dynamic Polymorphism
 * Inheritance & Abstraction
+* Encapsulation
 * Recommendation Logic
 
 ---
@@ -183,9 +193,10 @@ Savings  : ₹15 compared to Zomato
 * Real-time API integration
 * Dynamic surge pricing analysis
 * Multi-factor recommendation scoring
-* Historical fare trend tracking
+* Historical fare and price trend tracking
 * GUI/Web dashboard
 * Personalized user preferences
+* Machine learning-based recommendation engine
 
 ---
 
@@ -195,11 +206,7 @@ Savings  : ₹15 compared to Zomato
 * Designed extensible software architecture
 * Implemented recommendation and comparison logic
 * Strengthened C++ design and problem-solving skills
-
-
-
-
-
+* Utilized STL containers and smart pointers for scalable software development
 
 
 
