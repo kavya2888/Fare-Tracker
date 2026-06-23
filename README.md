@@ -61,18 +61,6 @@ The system compares:
 - ETA
 - Distance
 
-### Example Output
-
-```text
-Best Taxi Option at 10:00 AM
-
-Platform : Uber
-Fare     : ₹145
-ETA      : 14 min
-Distance : 8.2 km
-```
-
----
 
 ## Food Delivery Comparison
 
@@ -87,16 +75,57 @@ The system compares:
 
 ### Example Output
 
-```text
-Best Food Delivery Option at 10:00 AM
+SMART FARE TRACKER
+
+Enter Ride Distance : 8 km
+Current Time        : 10:00 AM
+
+----- Ride Sharing Comparison -----
+
+Platform : Uber
+Fare     : ₹185
+ETA      : 12 min
+
+Platform : Ola
+Fare     : ₹172
+ETA      : 14 min
+
+-----------------------------------
+Best Ride Option
+-----------------------------------
+Platform : Ola
+Fare     : ₹172
+ETA      : 14 min
+Savings  : ₹13 compared to Uber
+
+
+=========================================
+
+Order Value  : ₹350
+Delivery Area: IIT Kharagpur
+
+----- Food Delivery Comparison -----
 
 Platform : Swiggy
 Cost     : ₹70
 ETA      : 25 min
 Distance : 4.5 km
-```
 
----
+Platform : Zomato
+Cost     : ₹85
+ETA      : 30 min
+Distance : 4.5 km
+
+-----------------------------------
+Best Food Delivery Option
+-----------------------------------
+Platform : Swiggy
+Cost     : ₹70
+ETA      : 25 min
+Distance : 4.5 km
+Savings  : ₹15 compared to Zomato
+
+=========================================
 
 ##  Technologies Used
 
