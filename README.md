@@ -145,36 +145,37 @@ Output:
 
 ```text
           SMART FARE TRACKER
+
+----- Ride Sharing Comparison -----
+
+Uber Fare : ₹204
+Ola Fare  : ₹180
+
+Best Ride Option : Ola
+Savings          : ₹24
+
+-----------------------------------------
+
+----- Food Delivery Comparison -----
+
+Swiggy Cost : ₹332
+Zomato Cost : ₹331
+
+Best Food Delivery Option : Zomato
+Savings                   : ₹1
+
+-----------------------------------------
+
+----- Shopping Comparison -----
+
+Amazon Cost   : ₹1850
+Flipkart Cost : ₹1870
+Myntra Cost   : ₹1720
+
+Best Shopping Option : Myntra
+Savings              : ₹130 compared to Amazon
+
 =========================================
-
-Platform : Uber
-Cost     : ₹204
-
-Platform : Ola
-Cost     : ₹180
-
-Platform : Swiggy
-Cost     : ₹332
-
-Platform : Zomato
-Cost     : ₹331
-
-Platform : Amazon
-Cost     : ₹1850
-
-Platform : Flipkart
-Cost     : ₹1870
-
-Platform : Myntra
-Cost     : ₹1720
-
------------------------------------------
-Recommended Platform
------------------------------------------
-Platform : Myntra
-Cost     : ₹1720
------------------------------------------
-```
 
 ## Technologies Used
 
